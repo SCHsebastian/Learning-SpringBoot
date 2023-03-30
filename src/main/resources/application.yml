@@ -1,0 +1,18 @@
+#server:
+  #port: 8080
+  #compression:
+    #enabled: true
+
+    #SSL
+  #ssl:
+    #key-store: classpath:keystore.jks
+    #key-store-password: password
+    #key-password: password
+
+    #HTTP2
+  #http2:
+    #enabled: true
+
+#spring:
+  #main:
+    #web-application-type: servlet
