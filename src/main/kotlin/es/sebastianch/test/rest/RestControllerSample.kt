@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class RestControllerSample {
 
-    @GetMapping("/hello")
+    @GetMapping("/api/hello")
     fun hello() = "Hello World!"
 
-    @GetMapping("/sample-object")
+    @GetMapping("/api/admin/sample-object")
     fun sampleObject() = SampleO("Sebastián", 23)
 }

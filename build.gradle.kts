@@ -22,13 +22,19 @@ dependencies {
 	}
 	implementation("org.springframework.boot:spring-boot-starter-jetty")*/
 
+	//Springboot web
 	implementation("org.springframework.boot:spring-boot-starter-web")
-
-	implementation("org.springframework.boot:spring-boot-starter-web")
-
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	//Springboot security
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	testImplementation("org.springframework.security:spring-security-test")
+
+	//Jackson
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+	//Kotlin
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
 
 tasks.withType<KotlinCompile> {
