@@ -1,9 +1,11 @@
 package es.sebastianch.test.security
 
+import es.sebastianch.test.security.ApplicationUserPermisions.*
 import es.sebastianch.test.security.ApplicationUserRole.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
@@ -24,15 +26,19 @@ class ApplicationSecurityConfig{
     lateinit var passwordEncoder: PasswordEncoder
 
     /*
-    * He're we're using requestMatchers to match the request with the role
+    * Here we're using requestMatchers to match the request with the role
     * */
     @Bean
     fun filterChain(http: HttpSecurity):SecurityFilterChain{
         http
-            //.csrf().disable()
+            .csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/*").hasRole(USER.name)
-            .requestMatchers("/api/admin/**").hasRole(ADMIN.name)
+            .requestMatchers(HttpMethod.GET,"/api/*").hasAnyRole(USER.name,ADMIN.name)
+            .requestMatchers(HttpMethod.POST,"/api/*").hasAnyRole(USER.name,ADMIN.name)
+            .requestMatchers(HttpMethod.GET,"/api/admin/**").hasAuthority(ADMIN_READ.permission)
+            .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAuthority(ADMIN_WRITE.permission)
+            .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAuthority(ADMIN_WRITE.permission)
+            .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAuthority(ADMIN_WRITE.permission)
             .anyRequest().authenticated()
             .and()
             .httpBasic()
@@ -54,18 +60,20 @@ class ApplicationSecurityConfig{
      * is compulsory to use it in the method if not this won't work
      * */
     @Bean
-    fun userDetailsService():UserDetailsService = InMemoryUserDetailsManager(
-        User.builder()
-            .username("Sebastian")
-            .password(passwordEncoder.encode("123"))
-            .roles(ADMIN.name)
-            .build(),
+    fun userDetailsService():UserDetailsService =
+        InMemoryUserDetailsManager(
+             User.builder()
+                 .username("sebas")
+                 .password(passwordEncoder.encode("123"))
+                 //.roles(ADMIN.name)
+                 .authorities(ADMIN.getGrantedAuthorities())
+                 .build(),
 
-        User.builder()
-            .username("user")
-            .password(passwordEncoder.encode("123"))
-            .roles(USER.name)
-            .build()
-    )
-
+             User.builder()
+                 .username("user")
+                 .password(passwordEncoder.encode("123"))
+                 //.roles(USER.name)
+                 .authorities(USER.getGrantedAuthorities())
+                 .build()
+        )
 }
